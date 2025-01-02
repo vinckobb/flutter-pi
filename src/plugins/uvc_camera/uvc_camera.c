@@ -1,7 +1,7 @@
 #define _POSIX_C_SOURCE 200809L
 #include <unistd.h>
 
-#include <uvc_camera.h>
+#include "plugins/uvc_camera/uvc_camera.h"
 
 #include "flutter-pi.h"
 #include "platformchannel.h"
@@ -21,6 +21,39 @@ struct uvc_camera_plugin {
     bool uvc_camera_initialized;
 };
 
+static void on_start_camera(
+    struct uvc_camera_plugin *plugin,
+    const struct raw_std_value *arg,
+    const FlutterPlatformMessageResponseHandle *responsehandle
+) {
+    (void) plugin;
+    (void) arg;
+
+    LOG_UVC_CAMERA_DEBUG("startCamera()\n");
+}
+
+static void on_stop_camera(
+    struct uvc_camera_plugin *plugin,
+    const struct raw_std_value *arg,
+    const FlutterPlatformMessageResponseHandle *responsehandle
+) {
+    (void) plugin;
+    (void) arg;
+
+    LOG_UVC_CAMERA_DEBUG("stopCamera()\n");
+}
+
+static void on_dispose_texture(
+    struct uvc_camera_plugin *plugin,
+    const struct raw_std_value *arg,
+    const FlutterPlatformMessageResponseHandle *responsehandle
+) {
+    (void) plugin;
+    (void) arg;
+
+    LOG_UVC_CAMERA_DEBUG("disposeTexture()\n");
+}
+
 static void on_method_call(void *userdata, const FlutterPlatformMessage *message) {
     const FlutterPlatformMessageResponseHandle *responsehandle;
     const struct raw_std_value *envelope, *method, *arg;
@@ -39,45 +72,15 @@ static void on_method_call(void *userdata, const FlutterPlatformMessage *message
     method = raw_std_method_call_get_method(envelope);
     arg = raw_std_method_call_get_arg(envelope);
 
-    // if (raw_std_string_equals(method, "initNativeSdk")) {
-    //     on_init_native_sdk(plugin, arg, responsehandle);
-    // } else if (raw_std_string_equals(method, "captureEnvelope")) {
-    //     on_capture_envelope(plugin, arg, responsehandle);
-    // } else if (raw_std_string_equals(method, "loadImageList")) {
-    //     on_load_image_list(plugin, arg, responsehandle);
-    // } else if (raw_std_string_equals(method, "closeNativeSdk")) {
-    //     on_close_native_sdk(plugin, arg, responsehandle);
-    // } else if (raw_std_string_equals(method, "fetchNativeAppStart")) {
-    //     on_fetch_native_app_start(plugin, arg, responsehandle);
-    // } else if (raw_std_string_equals(method, "beginNativeFrames")) {
-    //     on_begin_native_frames(plugin, arg, responsehandle);
-    // } else if (raw_std_string_equals(method, "endNativeFrames")) {
-    //     on_end_native_frames(plugin, arg, responsehandle);
-    // } else if (raw_std_string_equals(method, "setUser")) {
-    //     on_set_user(plugin, arg, responsehandle);
-    // } else if (raw_std_string_equals(method, "addBreadcrumb")) {
-    //     on_add_breadcrumb(plugin, arg, responsehandle);
-    // } else if (raw_std_string_equals(method, "clearBreadcrumbs")) {
-    //     on_clear_breadcrumbs(plugin, arg, responsehandle);
-    // } else if (raw_std_string_equals(method, "setContexts")) {
-    //     on_set_contexts(plugin, arg, responsehandle);
-    // } else if (raw_std_string_equals(method, "removeContexts")) {
-    //     on_remove_contexts(plugin, arg, responsehandle);
-    // } else if (raw_std_string_equals(method, "setExtra")) {
-    //     on_set_extra(plugin, arg, responsehandle);
-    // } else if (raw_std_string_equals(method, "removeExtra")) {
-    //     on_remove_extra(plugin, arg, responsehandle);
-    // } else if (raw_std_string_equals(method, "setTag")) {
-    //     on_set_tag(plugin, arg, responsehandle);
-    // } else if (raw_std_string_equals(method, "removeTag")) {
-    //     on_remove_tag(plugin, arg, responsehandle);
-    // } else if (raw_std_string_equals(method, "discardProfiler")) {
-    //     on_discard_profiler(plugin, arg, responsehandle);
-    // } else if (raw_std_string_equals(method, "collectProfile")) {
-    //     on_collect_profile(plugin, arg, responsehandle);
-    // } else {
-    //     platch_respond_error_std(responsehandle, "unknown-method", "", &STDNULL);
-    // }
+    if (raw_std_string_equals(method, "startCamera")) {
+        on_start_camera(plugin, arg, responsehandle);
+    } else if (raw_std_string_equals(method, "stopCamera")) {
+        on_stop_camera(plugin, arg, responsehandle);
+    } else if (raw_std_string_equals(method, "disposeTexture")) {
+        on_dispose_camera(plugin, arg, responsehandle);
+    } else {
+        platch_respond_error_std(responsehandle, "unknown-method", "", &STDNULL);
+    }
 }
 
 enum plugin_init_result uvc_camera_plugin_deinit(struct flutterpi *flutterpi, void **userdata_out) {
