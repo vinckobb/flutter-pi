@@ -37,6 +37,7 @@ option(BUILD_GSTREAMER_AUDIO_PLAYER_PLUGIN "Include the gstreamer based audio pl
 option(TRY_BUILD_GSTREAMER_AUDIO_PLAYER_PLUGIN "Don't throw an error if the gstreamer libs aren't found, instead just don't build gstreamer audio plugin." ON)
 
 option(BUILD_SENTRY_PLUGIN "Include the sentry plugin in the finished binary. Allows for crash reporting to sentry.io." OFF)
+option(BUILD_UVC_CAMERA_PLUGIN "Include the uvc camera plugin in the finished binary. Allows to use uvc camera." ON)
 
 option(BUILD_CHARSET_CONVERTER_PLUGIN "Include the charset converter plugin in the finished binary." OFF)
 option(ENABLE_OPENGL "Build with EGL/OpenGL rendering support." ON)
@@ -304,6 +305,9 @@ if (BUILD_RAW_KEYBOARD_PLUGIN)
 endif()
 if (BUILD_TEST_PLUGIN)
   target_sources(flutterpi_module PRIVATE src/plugins/testplugin.c)
+endif()
+if (BUILD_UVC_CAMERA_PLUGIN)
+  target_sources(flutterpi_module PRIVATE src/plugins/uvc_camera/uvc_camera.c)
 endif()
 if (BUILD_GSTREAMER_VIDEO_PLAYER_PLUGIN)
   if (NOT HAVE_EGL_GLES2)
