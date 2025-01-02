@@ -77,7 +77,7 @@ static void on_method_call(void *userdata, const FlutterPlatformMessage *message
     } else if (raw_std_string_equals(method, "stopCamera")) {
         on_stop_camera(plugin, arg, responsehandle);
     } else if (raw_std_string_equals(method, "disposeTexture")) {
-        on_dispose_camera(plugin, arg, responsehandle);
+        on_dispose_texture(plugin, arg, responsehandle);
     } else {
         platch_respond_error_std(responsehandle, "unknown-method", "", &STDNULL);
     }
